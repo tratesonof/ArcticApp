@@ -32,6 +32,7 @@ dependencies:
   sembast: ^2.4.8
   path_provider: ^1.6.24
   equatable: ^1.2.5
+  flutter_svg: ^0.19.2+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -68,6 +69,7 @@ flutter:
     - assets/images/secondPhoto.jpg
     - assets/images/Tiksi.png
     - assets/images/tunguska.png
+    - assets/images/ic_extra_large_background.svg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
