@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:very_good_analysis/very_good_analysis.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -10,9 +11,58 @@ class MainScreen extends StatefulWidget {
   }
 }
 
-class MainScreenState extends State<MainScreen> {
-  int _bottomNavigationIndex = 0;
+class CatalogScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return CatalogNavigatorState();
+  }
+}
 
+GlobalKey<NavigatorState> _catalogKey = GlobalKey<NavigatorState>();
+
+class CatalogNavigatorState extends State<CatalogScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: _catalogKey,
+      onGenerateRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (BuildContext context) {
+            switch (settings.name) {
+              case '/':
+                return DefaultScreen();
+              case '/ArchangelskInfo':
+                return ArcticCityScreen(
+                  cityName: 'Архангельск',
+                  pathToAsset: 'assets/images/Archangelsk.png',
+                );
+              case '/MurmanskInfo':
+                return ArcticCityScreen(
+                  cityName: 'Мурманск',
+                  pathToAsset: 'assets/images/Murmansk.png',
+                );
+              case '/Narian-MarInfo':
+                return ArcticCityScreen(
+                  cityName: 'Нарьян-Мар',
+                  pathToAsset: 'assets/images/Narian-Mar.png',
+                );
+              case "/AnadyrInfo":
+                return ArcticCityScreen(
+                  cityName: 'Анадыр',
+                  pathToAsset: 'assets/images/Anadyr.png',
+                );
+              default:
+                return null;
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class DefaultScreen extends StatelessWidget {
   void _awaitReturnValueFromSecondScreen({
     BuildContext context,
     String cityName,
@@ -25,20 +75,14 @@ class MainScreenState extends State<MainScreen> {
           builder: (context) => ArcticCityScreen(
             cityName: cityName,
             pathToAsset: pathToAsset,
-            bottomNavigationIndex: _bottomNavigationIndex,
           ),
         ));
-
-    // after the SecondScreen result comes back update the Text widget with it
-    setState(() {
-      _bottomNavigationIndex = result;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
+    return Container(
+      child: ListView(
         scrollDirection: Axis.vertical,
         children: [
           Padding(
@@ -114,12 +158,8 @@ class MainScreenState extends State<MainScreen> {
                                       width: 255,
                                     ),
                                     onTap: () {
-                                      _awaitReturnValueFromSecondScreen(
-                                        cityName: 'Архангельск',
-                                        pathToAsset:
-                                            'assets/images/Archangelsk.png',
-                                        context: context,
-                                      );
+                                      Navigator.pushNamed(
+                                          context, '/ArchangelskInfo');
                                     },
                                   ),
                                 ),
@@ -180,12 +220,8 @@ class MainScreenState extends State<MainScreen> {
                                       width: 255,
                                     ),
                                     onTap: () {
-                                      _awaitReturnValueFromSecondScreen(
-                                        cityName: 'Мурманск',
-                                        pathToAsset:
-                                            'assets/images/Murmansk.png',
-                                        context: context,
-                                      );
+                                      Navigator.pushNamed(
+                                          context, '/MurmanskInfo');
                                     },
                                   ),
                                 ),
@@ -246,12 +282,8 @@ class MainScreenState extends State<MainScreen> {
                                       width: 255,
                                     ),
                                     onTap: () {
-                                      _awaitReturnValueFromSecondScreen(
-                                        cityName: 'Нарьян-Мар',
-                                        pathToAsset:
-                                            'assets/images/Narian-Mar.png',
-                                        context: context,
-                                      );
+                                      Navigator.pushNamed(
+                                          context, '/Narian-MarInfo');
                                     },
                                   ),
                                 ),
@@ -312,11 +344,8 @@ class MainScreenState extends State<MainScreen> {
                                       width: 255,
                                     ),
                                     onTap: () {
-                                      _awaitReturnValueFromSecondScreen(
-                                        cityName: 'Анадыр',
-                                        pathToAsset: 'assets/images/Anadyr.png',
-                                        context: context,
-                                      );
+                                      Navigator.pushNamed(
+                                          context, '/AnadyrInfo');
                                     },
                                   ),
                                 ),
@@ -356,70 +385,150 @@ class MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Color.fromARGB(255, 172, 189, 201),
+    );
+  }
+}
+
+class TempNavigator extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return TempNavigatorState();
+  }
+}
+
+GlobalKey<NavigatorState> _tempScreenKey = GlobalKey<NavigatorState>();
+
+class TempNavigatorState extends State<TempNavigator> {
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: _tempScreenKey,
+      onGenerateRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+            settings: settings,
+            builder: (BuildContext context) {
+              switch (settings.name) {
+                case '/':
+                  return TempScreen1();
+                case '/tempScreen2':
+                  return TempScreen2();
+                default:
+                  return null;
+              }
+            });
+      },
+    );
+  }
+}
+
+class TempScreen1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        AppBar(
+          title: Text("Temp screen 1"),
+        ),
+        FlatButton(
+          child: Text("Go to Temp screen 2"),
+          onPressed: () => Navigator.pushNamed(context, '/tempScreen2'),
+        ),
+      ],
+    );
+  }
+}
+
+class TempScreen2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        AppBar(
+          title: Text("Temp screen 2"),
+        ),
+      ],
+    );
+  }
+}
+
+class MainScreenState extends State<MainScreen> {
+  int _bottomNavigationIndex = 0;
+
+  List<GlobalKey<NavigatorState>> _navigatorKeys = [
+    _catalogKey,
+    _tempScreenKey,
+  ];
+
+  Future<bool> _systemBackButtonPressed() {
+    if (_navigatorKeys[_bottomNavigationIndex].currentState.canPop()) {
+      _navigatorKeys[_bottomNavigationIndex]
+          .currentState
+          .pop(_navigatorKeys[_bottomNavigationIndex].currentContext);
+    } else {
+      SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _systemBackButtonPressed,
+      child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                color: Color.fromARGB(255, 172, 189, 201),
+              ),
+              activeIcon: Icon(
+                Icons.home,
+              ),
+              label: '',
             ),
-            activeIcon: Icon(
-              Icons.home,
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.business,
+                color: Color.fromARGB(255, 172, 189, 201),
+              ),
+              activeIcon: Icon(
+                Icons.business,
+              ),
+              label: '',
             ),
-            label: '',
+          ],
+          iconSize: 32,
+          currentIndex: _bottomNavigationIndex,
+          onTap: (int index) {
+            setState(() {
+              _bottomNavigationIndex = index;
+            });
+          },
+        ),
+        body: SafeArea(
+          child: IndexedStack(
+            index: _bottomNavigationIndex,
+            children: [
+              CatalogScreen(),
+              TempNavigator(),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.business,
-              color: Color.fromARGB(255, 172, 189, 201),
-            ),
-            activeIcon: Icon(
-              Icons.business,
-            ),
-            label: '',
-          ),
-        ],
-        iconSize: 32,
-        currentIndex: _bottomNavigationIndex,
-        onTap: (int index) {
-          setState(() {
-            _bottomNavigationIndex = index;
-          });
-        },
+        ),
       ),
     );
   }
 }
 
-class ArcticCityScreen extends StatefulWidget {
+class ArcticCityScreen extends StatelessWidget {
   final String pathToAsset;
   final String cityName;
-  int bottomNavigationIndex;
 
-  ArcticCityScreen(
-      {this.pathToAsset, this.cityName, this.bottomNavigationIndex});
-
-  @override
-  State<StatefulWidget> createState() {
-    return ArcticCityScreenState(
-        pathToAsset: pathToAsset,
-        cityName: cityName,
-        bottomNavigationIndex: bottomNavigationIndex);
-  }
-}
-
-class ArcticCityScreenState extends State<ArcticCityScreen> {
-  final String pathToAsset;
-  final String cityName;
-  int bottomNavigationIndex;
-
-  ArcticCityScreenState(
-      {this.pathToAsset, this.cityName, this.bottomNavigationIndex});
+  ArcticCityScreen({this.pathToAsset, this.cityName});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
+    return Container(
+      child: ListView(
         scrollDirection: Axis.vertical,
         children: [
           Padding(
@@ -429,15 +538,9 @@ class ArcticCityScreenState extends State<ArcticCityScreen> {
               child: Container(
                 width: 32,
                 height: 32,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.pop(context, bottomNavigationIndex);
-                  },
-                  child: Icon(
-                    Icons.arrow_back,
-                    size: 24,
-                  ),
-                  backgroundColor: Color.fromARGB(200, 119, 152, 176),
+                child: Icon(
+                  Icons.arrow_back,
+                  size: 24,
                 ),
               ),
             ),
@@ -467,37 +570,6 @@ class ArcticCityScreenState extends State<ArcticCityScreen> {
             ),
           ),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home,
-              color: Color.fromARGB(255, 172, 189, 201),
-            ),
-            activeIcon: Icon(
-              Icons.home,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.business,
-              color: Color.fromARGB(255, 172, 189, 201),
-            ),
-            activeIcon: Icon(
-              Icons.business,
-            ),
-            label: '',
-          ),
-        ],
-        iconSize: 32,
-        currentIndex: bottomNavigationIndex,
-        onTap: (int index) {
-          setState(() {
-            bottomNavigationIndex = index;
-          });
-        },
       ),
     );
   }
